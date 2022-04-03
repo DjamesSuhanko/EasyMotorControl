@@ -7,6 +7,7 @@ extern "C" {
 }
 */
 
+//03-04-2022 - Added to github in EasyMotorControl repo
 uint8_t eoc_size; //! Number of end-of-courses
 
 uint16_t pcf16bits; //! If using PCF8575, we have 16 bits to control the motor and end of course

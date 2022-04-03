@@ -55,3 +55,14 @@ int MotorControl::setupMotor(motor pins)
     motorsAdded += 1;
     return 0;
 }
+
+int MotorControl::setupMotor(uint8_t pcf_addr)
+{
+    for (uint8_t i=0;i<3;i++){
+        if (pcf857x_addr[i] == 0){
+            pcf857x_addr[i] = pcf_addr;
+            pcf_index = i;
+            return;
+        } 
+    }
+}

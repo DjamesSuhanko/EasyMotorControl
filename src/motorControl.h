@@ -7,10 +7,21 @@ extern "C" {
 }
 */
 
+/*
+TODO:
+- create typedef to struct each motor and their eoc's.
+- instantiate an array of citated typedef above
+- create a method to initialize the configurations
+- is needed to parametizer constructor? Check it later
+- implement methods declared in this class
+- pcf16bits will control just one pcf8575. Seems better create one per motor. If same address is used, so configure bits related to their function (motor bits and eoc's bits)
+*/
+
 //03-04-2022 - Added to github in EasyMotorControl repo
 uint8_t eoc_size; //! Number of end-of-courses
 
 uint16_t pcf16bits; //! If using PCF8575, we have 16 bits to control the motor and end of course
+
 /*! Stop with any anomaly condition. Checked all time, in each step.
 This variable can be triggered by external button or any internal anomaly detected */
 bool emergency_stop;
@@ -67,14 +78,16 @@ class MotorControl{
         void rs485send(String msg);
         void rs485receive(String msg);
         
-        int setPCFaddr(uint8_t addr, uint8_t arr_pcf_pos);                                //! Use to set address value for PCF8574. 
-        int setupMotor(motor pins, uint8_t arr_motors_pos);                               //! Add a motor to motor array in 'arr_motors' position (until 10 units). This method is overloaded
-        int setupMotor(motor pins);                                                       //! Auto-positioning in array. This method is overloaded   
+        int setPCFaddr(uint8_t addr, uint8_t arr_pcf_pos);   //! Use to set address value for PCF8574. 
+        int setupMotor(motor pins, uint8_t arr_motors_pos);  //! Add a motor to motor array in 'arr_motors' position (until 10 units). This method is overloaded
+        int setupMotor(motor pins);                          //! Auto-positioning in array. This method is overloaded   
+        int setupMotor(uint8_t pcf_addr);                    //Using pcf857x instead direct I/O's.
         
     private:
         motor motorArray[10];   
         uint8_t motorsAdded     = 0;    //! counter to motors added 
-        uint8_t pcf8574_addr[3] = {0};  //! 3 bytes to alocate addresses of PCF8574. If using CD74HC4067, just let the values like the same, as zero. Use setPCFaddr(addr,pos) to configure it.   
+        uint8_t pcf857x_addr[3] = {0};  //! 3 bytes to alocate addresses of PCF8574. If using CD74HC4067, just let the values like the same, as zero. Use setPCFaddr(addr,pos) to configure it.   
         uint8_t rs485_pins[4]   = {0};  //! set pins RO, RE, DE and DI using the method rs485Setup(RO,RE,DE,DI)
+        uint8_t pcf_index       = 0;    //Where is pcf controller? - This variable is changed by setupMotor(uint8_t pcf_addr) overloaded method
 };
 

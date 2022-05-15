@@ -8,6 +8,8 @@ class EasyPCF8575{
     public:
         EasyPCF8575();                               //! if SEARCH is passed to pcf_addr, the lib will try to discover address
 
+        bool check(uint8_t addr);                    //! Just returns true if pcf found
+
         uint8_t findPCFaddr();                       //!find and return PCF address
 
         uint8_t getLeftByteValue();                  //! Returns value of left byte
@@ -42,6 +44,8 @@ class EasyPCF8575{
 
         void startI2C(uint8_t sda_pin, uint8_t scl_pin, uint8_t pcf_addr); //!Call it in setup() function. Instead pcf_addr, you can pass SEARCH as parameter to auto discovering
         void startI2C(uint8_t pcf_addr); //! Using default pins in Arduino, but other platforms may be needed to use sda, scl and addr.
+
+        uint8_t whichAddr();
 
     private:
         uint8_t localBuf[2];

@@ -62,7 +62,7 @@ int MotorControl::setupMotor(uint8_t pcf_addr)
         if (pcf857x_addr[i] == 0){
             pcf857x_addr[i] = pcf_addr;
             pcf_index = i;
-            return;
+            return 0;
         } 
     }
 }

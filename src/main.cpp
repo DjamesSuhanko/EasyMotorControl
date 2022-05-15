@@ -1,5 +1,5 @@
 #include <Arduino.h>
-
+#include <EasyPCF8575.h>
 /*
 Se estiver configurado para 400 no dip switch (ON ON ON ON _ _ _ _) e o valor em sw_conf for mantido em 400, teremos 1 volta completa. 
 Se a configuração for 800 (OFF ON ON ON _ _ _ _) e for mantido 400, será dada meia volta. Para uma volta completa na metade da velocidade inicial, use 800 e OFF ON ON ON _ _ _ _.

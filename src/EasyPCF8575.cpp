@@ -8,37 +8,6 @@ EasyPCF8575::EasyPCF8575()
     this->i2c_exists       = false;
 }
 
-void EasyPCF8575::changeBytesValue(uint8_t *value)
-{
-    //create a local buffer
-    uint8_t localBuf[2];
-
-    //read two bytes from pcf
-    Wire.requestFrom(this->pcf_address,2);
-    if (Wire.available()){
-        Wire.readBytes(localBuf,2);
-    }
-
-    //apply mask and write to pcf
-    //.
-
-}
-
-void EasyPCF8575::changeBytesValue(uint16_t value)
-{
-
-}
-
-void EasyPCF8575::changeLeftByteValue(uint8_t value)
-{
-
-}
-
-void EasyPCF8575::changeRightByteValue(uint8_t value)
-{
-
-}
-
 uint8_t EasyPCF8575::findPCFaddr()
 {
     byte error, address;
@@ -60,111 +29,292 @@ uint8_t EasyPCF8575::findPCFaddr()
     }
 }
 
+//Returns 0 if LOW, 1 if HIGH
 uint8_t EasyPCF8575::getBitValue(uint8_t bit0UpTo15)
 {
-    uint8_t localBuf[2];
     Wire.requestFrom(this->pcf_address,2);
     if (Wire.available()){
         Wire.readBytes(localBuf,2);
     }
 
     uint16_t bothBytes = (localBuf[0] << 8) | (localBuf[1] << 0);
-    return bothBytes&(1<<bit0UpTo15);
+    return bothBytes&(1<<bit0UpTo15) > 0 ? 1 : 0;
 }
 
 uint8_t *EasyPCF8575::getBytesValueAsBytes()
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
+
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+        return localBuf;
+    }
+    return localBuf;
 
 }
 
 uint16_t EasyPCF8575::getBytesValueAsInt()
 {
+    uint8_t localBuf[2];
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    return (localBuf[0] << 8) | (localBuf[1] << 0);
 }
 
 uint8_t EasyPCF8575::getLeftBitValue(uint8_t bit0upTo7)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+        return localBuf[0]&(1<<bit0upTo7);
+    }
+    return 0;
 }
 
 uint8_t EasyPCF8575::getLeftByteValue()
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+        return localBuf[0];
+    }
+    return 0;
 }
 
 uint8_t EasyPCF8575::getRightBitValue(uint8_t bit0upTo7)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+        return localBuf[1]&(1<<bit0upTo7);
+    }
+    return 0;
 }
 
 uint8_t EasyPCF8575::getRightByteValue()
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+        return localBuf[1];
+    }
+    return 0;
 }
 
 void EasyPCF8575::setAllBitsDown()
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setAllBitsUp()
 {
+    localBuf[0] = 255;
+    localBuf[1] = 255;
 
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setBitDown(uint8_t bit0upTo15)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    uint16_t values = (localBuf[0]<<8) | (localBuf[1] <<0);
+    values = values&~(1<<bit0upTo15);
+
+    localBuf[1] = values &~(255 << 8);
+    localBuf[0] = values >> 8;
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setBitUp(uint8_t bit0upTo15)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    uint16_t values = (localBuf[0]<<8) | (localBuf[1] <<0);
+    values = values|(1<<bit0upTo15);
+
+    localBuf[1] = values &~(255 << 8);
+    localBuf[0] = values >> 8;
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setInvertBit(uint8_t bit0upTo15)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    uint16_t values = (localBuf[0]<<8) | (localBuf[1] <<0);
+    values = values^(1<<bit0upTo15);
+
+    localBuf[1] = values &~(255 << 8);
+    localBuf[0] = values >> 8;
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setLeftBitDown(uint8_t bit0upTo7)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    localBuf[0] = localBuf[0]&~(1<<bit0upTo7);
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setLeftBitUp(uint8_t bit0upTo7)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    localBuf[0] = localBuf[0]|(1<<bit0upTo7);
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setNewBytesValue(uint8_t *value)
 {
-
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(value,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setNewBytesValue(uint16_t value)
 {
+    localBuf[1] = value &~ (255<<8);
+    localBuf[0] = value >> 8;
 
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setNewLeftByteValue(uint8_t value)
 {
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
 
+    localBuf[0] = value;
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setNewRightByteValue(uint8_t value)
 {
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
 
+    localBuf[1] = value;
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setRightBitDown(uint8_t bit0upTo7)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    localBuf[1] = localBuf[1]&~(1<<bit0upTo7);
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::setRightBitUp(uint8_t bit0upTo7)
 {
+    localBuf[0] = 0;
+    localBuf[1] = 0;
 
+    Wire.requestFrom(this->pcf_address,2);
+    if (Wire.available()){
+        Wire.readBytes(localBuf,2);
+    }
+
+    localBuf[1] = localBuf[1]|(1<<bit0upTo7);
+
+    Wire.beginTransmission(this->pcf_address);
+    Wire.write(localBuf,2);
+    Wire.endTransmission();
 }
 
 void EasyPCF8575::startI2C(uint8_t sda_pin, uint8_t scl_pin, uint8_t pcf_addr)

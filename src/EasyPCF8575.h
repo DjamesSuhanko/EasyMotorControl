@@ -10,12 +10,6 @@ class EasyPCF8575{
 
         uint8_t findPCFaddr();                       //!find and return PCF address
 
-        void changeLeftByteValue(uint8_t value);     //! Change value preserving other values in this byte
-        void changeRightByteValue(uint8_t value);    //! Change value preserving other values in this byte
-
-        void changeBytesValue(uint8_t *value);       //! Change value preserving other values in this bytes. Here we need pass an array of 2 bytes like [16,5], representing left and right, respectively.
-        void changeBytesValue(uint16_t value);       //! Set a new value, preserving other values in this bytes. Here we can pass a int like 512+128, but not 1+1, because this is equal 2, resulting in 1 byte: 00000010
-
         uint8_t getLeftByteValue();                  //! Returns value of left byte
         uint8_t getRightByteValue();                 //! Returns value of right byte
 
@@ -50,6 +44,7 @@ class EasyPCF8575{
         void startI2C(uint8_t pcf_addr); //! Using default pins in Arduino, but other platforms may be needed to use sda, scl and addr.
 
     private:
+        uint8_t localBuf[2];
         uint8_t byte_left_value;
         uint8_t byte_right_value;
         uint8_t pcf_address;

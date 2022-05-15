@@ -2,7 +2,7 @@
 
 MotorControl::MotorControl()
 {
-    
+
 }
 
 void MotorControl::calibrate(motor target)

@@ -2,10 +2,19 @@
 
 EasyPCF8575::EasyPCF8575()
 {
-    this->pcf_address      = 0;   //must be changed in setup() function
-    this->byte_left_value  = 255; //This is the initial value when starting PCF8575
-    this->byte_right_value = 255; //Same above
-    this->i2c_exists       = false;
+    this->pcf_address = 0;   //must be changed in setup() function
+    this->i2c_exists  = false;
+}
+
+bool EasyPCF8575::check(uint8_t addr)
+{
+    if (addr > 126){
+        return this->i2c_exists;
+    }
+    Wire.beginTransmission(addr);
+    byte error = Wire.endTransmission();
+
+    return error > 0 ? false : true;
 }
 
 uint8_t EasyPCF8575::findPCFaddr()
@@ -25,7 +34,7 @@ uint8_t EasyPCF8575::findPCFaddr()
         }    
     }
     if (this->i2c_exists == false){
-        return 0;
+        return 255;
     }
 }
 
@@ -319,8 +328,10 @@ void EasyPCF8575::setRightBitUp(uint8_t bit0upTo7)
 
 void EasyPCF8575::startI2C(uint8_t sda_pin, uint8_t scl_pin, uint8_t pcf_addr)
 {
-    Wire.begin(sda_pin, scl_pin);
-    this->pcf_address = pcf_addr >126 ? this->findPCFaddr() : pcf_addr;
+    Wire.setPins(21,22);
+    Wire.begin();
+    uint8_t addr = this->findPCFaddr();
+    this->pcf_address = pcf_addr >126 ? addr : pcf_addr;
     this->i2c_exists = this->pcf_address > 0 ? true : false;
 }
 
@@ -329,4 +340,9 @@ void EasyPCF8575::startI2C(uint8_t pcf_addr)
     Wire.begin();
     this->pcf_address = pcf_addr >126 ? this->findPCFaddr() : pcf_addr;
     this->i2c_exists = this->pcf_address > 0 ? true : false;
+}
+
+uint8_t EasyPCF8575::whichAddr()
+{
+    return this->pcf_address;
 }

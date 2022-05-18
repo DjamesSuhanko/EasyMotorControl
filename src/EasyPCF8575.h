@@ -1,3 +1,10 @@
+/*
+  EasyPCF8575 - The easiest library for PCF8575.
+  Created by Djames Suhanko <djames.suhanko@gmail.com>, May 5, 2022.
+  Released into the public domain.
+*/
+#ifndef EasyPCF8575_h
+#define EasyPCF8575_h
 #include <Arduino.h>
 #include <Wire.h>
 
@@ -49,9 +56,8 @@ class EasyPCF8575{
 
     private:
         uint8_t localBuf[2];
-        uint8_t byte_left_value;
-        uint8_t byte_right_value;
         uint8_t pcf_address;
 
         bool i2c_exists;
 };
+#endif

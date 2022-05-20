@@ -24,7 +24,7 @@ Bits   |   Driver
 2      |   PUL-
 
 3      | SIGNAL para EOC
-4      | Leitura do EOC
+4      | Leitura do EOC  - TODO: Deixar leitura no segundo byte?
 
 Da MCU:
 VCC    |   ENA+

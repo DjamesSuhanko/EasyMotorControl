@@ -67,6 +67,8 @@ void doStop(){
 
 }
 
+//Tutorial de biblioteca
+
 void parameterizer(){
   if (Serial.available()){
       doStop();
